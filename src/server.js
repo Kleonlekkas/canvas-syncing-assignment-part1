@@ -4,6 +4,8 @@ const socketio = require('socket.io');
 
 const fs = require('fs'); // grab our file system
 
+const PORT = process.env.PORT || process.env.NODE_PORT || 3000;
+
 
 let theTotal = 0;
 
