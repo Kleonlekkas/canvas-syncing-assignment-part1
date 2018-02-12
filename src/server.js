@@ -1,0 +1,48 @@
+const http = require('http');
+
+const socketio = require('socket.io');
+
+const fs = require('fs'); // grab our file system
+
+
+let theTotal = 0;
+
+const handler = (req, res) => {
+  fs.readFile(`${__dirname}/../client/index.html`, (err, data) => {
+    // if err, throw it for now
+    if (err) {
+      throw err;
+    }
+
+    res.writeHead(200);
+    res.end(data);
+  });
+};
+
+// create new server
+const app = http.createServer(handler);
+
+app.listen(3000);
+
+const io = socketio(app);
+
+// create new socket server
+io.on('connection', (socket) => {
+  // Create our roomfor everyone to join
+  socket.join('genericRoom');
+
+  socket.on('updateTotal', (data) => {
+    theTotal += data;
+
+    // emit it to all clients now
+    io.sockets.in('genericRoom').emit('updated', theTotal);
+  });
+
+  // when people leave, remove them from roomfor
+  socket.on('disconnect', () => {
+    socket.leave('genericRoom');
+  });
+});
+
+
+console.log('listening on port 3000');
