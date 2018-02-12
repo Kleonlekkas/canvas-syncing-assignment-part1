@@ -24,7 +24,7 @@ const handler = (req, res) => {
 // create new server
 const app = http.createServer(handler);
 
-app.listen(3000);
+app.listen(PORT);
 
 const io = socketio(app);
 
@@ -47,4 +47,4 @@ io.on('connection', (socket) => {
 });
 
 
-console.log('listening on port 3000');
+console.log(`listening on port ${PORT}`);
